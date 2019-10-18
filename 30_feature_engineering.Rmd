@@ -28,30 +28,33 @@ df1<- merge(X2016[,c(1,3,7,8,9)],
 colnames(df1)<-c("Country","Happiness_Rank_2016","Happiness_Rank_2017","Economy_GDP_per_capita_2016","Economy_GDP_per_capita_2017","Family_2016","Family_2017","Health_2016","Health_2017")
 
 
-Happiness_Rank_Difference<- function(x,y){
-  x-y 
+Happiness_Rank_Difference<- function(df, x,y){
+  df %>% 
+  mutate(Happiness_Rank_Difference= {{x}}-{{y}}) 
 }
-  df1 %>% 
-  mutate(Happiness_Rank_Difference= Happiness_Rank_2017, Happiness_Rank_2016)  
+df1<-Happiness_Rank_Difference(df1,Happiness_Rank_2017, Happiness_Rank_2016)
 
-Economics_Difference <-function(x,y){
-  x-y
+
+Economics_Difference <-function(df,x,y){
+  df %>% 
+  mutate(Economics_Difference= {{x}}-{{y}}) 
 }
-  df1 %>% 
-  mutate(Economics_Difference=Economy_GDP_per_capita_2017-Economy_GDP_per_capita_2016)
-  
-Family_Difference <- function(x,y){
-    x-y
+  df1 <- Economics_Difference(df1,Economy_GDP_per_capita_2017,Economy_GDP_per_capita_2016)
+
+Family_Difference <- function(df,x,y){
+    df %>% 
+    mutate(Family_Difference= {{x}}-{{y}})
   } 
-df1 %>% 
-  mutate(Family_Difference=Family_2017,Family_2016)
+df1 <- Family_Difference(df1,Family_2017,Family_2016)
 
-Health_Difference <- function(x,y){
-  x-y
+Health_Difference <- function(df,x,y){
+  df %>% 
+  mutate(Health_Difference= {{x}}-{{y}})
 }
+df1 <- Health_Difference(df1,Health_2017,Health_2016)
 df1 %>% 
-  mutate(Health_Difference=Health_2017,Health_2016)
-  
+  select(Country,Happiness_Rank_Difference,Economics_Difference,Family_Difference,Health_Difference)
+
 df1
 ```
 
@@ -80,8 +83,6 @@ continent <- function(country){
                     country %in% North_America ~ "North_America",
                     country %in% South_America ~ "South_America")
   ctnt
-  
-  
 }
 ```
 
